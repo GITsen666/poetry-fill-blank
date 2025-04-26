@@ -1,30 +1,35 @@
-<!文档类型html >
-< 超文本标记语言 语言=“zh-CN” >
-< 头 >
-< 自指的 字符集=“UTF八号" >
-< 自指的 名字 = "视窗" 内容 = 宽度=设备宽度，初始比例=1.0 >
-<标题>李白诗词填空</标题 >
-< 环 能量损耗率 = "样式表" href = "款式100 . CSS " >
-</头 >
-<正文>
-< 差异 班级="集装箱" >
-< 页眉><氕 >李白诗词填空</氕></页眉 >
-< 差异 班级= "游戏开始">
-< 按钮 身份证明(识别)="开始-btn " >开始游戏</按钮 >
-< 按钮 身份证明(识别)="规则-btn " >游戏规则</按钮 >
-</差异 >
-< 差异 班级= "游戏规则" 身份证明(识别)= "规则" 风格= "显示:无；">
-< 氘 >游戏规则</氘 >
-< p >根据李白的诗句,在空白处填入正确的字或词,完成诗句10.11
-< 按钮 身份证明(识别)="关闭-规则-btn " >关闭规则</按钮 >
-</差异 >
-< 差异 班级 = “游戏屏幕” 身份证明(识别) = “游戏屏幕” 风格 = " 显示:none>
-< p身份证明(标识)= "诗歌" > </p >
-< 差异 身份证明(识别) = “诗歌输入” > </差异 >
-< 按钮 身份证明(识别)="检查btn " >检查</按钮 >
-< p 身份证明(识别)=“反馈”></p >
-</差异 >
-</差异 >
-< 脚本 科学研究委员会=" script.js "></脚本 >
-</身体 >
-</超文本标记语言 >
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>李白诗词填空</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>李白诗词填空</h1>
+    </header>
+    
+    <div class="game-start">
+      <button id="start-btn">开始游戏</button>
+      <button id="rules-btn">游戏规则</button>
+    </div>
+    
+    <div class="game-rules" id="rules" style="display: none;">
+      <h2>游戏规则</h2>
+      <p>根据李白的诗句，在空白处填入正确的字或词，完成诗句。</p>
+      <button id="close-rules-btn">关闭规则</button>
+    </div>
+    
+    <div class="game-screen" id="game-screen" style="display: none;">
+      <p id="poetry"></p>
+      <div id="poetry-input"></div>
+      <button id="check-btn">检查</button>
+      <p id="feedback"></p>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
