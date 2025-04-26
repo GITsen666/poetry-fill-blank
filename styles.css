@@ -1,17 +1,36 @@
 body {
   font-family: Arial, sans-serif;
-  margin: 0; padding: 0;
-  display: flex; justify-content: center; align-items: center;
-  height: 100vh; background: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4;
 }
-.container { text-align: center; }
+
+.container {
+  text-align: center;
+}
+
 button {
-  margin: 10px; padding: 10px 20px; font-size: 16px; cursor: pointer;
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
 }
-#game-screen,#rules { margin-top: 20px; }
+
+#game-screen, #rules {
+  margin-top: 20px;
+}
+
 #poetry-input input {
-  width: 80px; margin: 0 5px;
+  width: 80px;
+  margin: 0 5px;
 }
+
 #feedback {
-  font-size: 18px; margin-top: 10px; color: #2c3e50;
+  font-size: 18px;
+  margin-top: 10px;
+  color: #2c3e50;
 }
