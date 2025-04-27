@@ -1,35 +1,51 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>李白诗词填空</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>李白诗词填空</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>李白诗词填空</h1>
-    </header>
-    
-    <div class="game-start">
-      <button id="start-btn">开始游戏</button>
-      <button id="rules-btn">游戏规则</button>
+    <div id="home" class="container">
+        <h1>李白诗词填空</h1>
+        <div class="highscore">最高分：<span id="highscore">0</span></div>
+        
+        <div class="difficulty">
+            <select id="difficulty">
+                <option value="easy">简单</option>
+                <option value="medium">中等</option>
+                <option value="hard">困难</option>
+            </select>
+        </div>
+        
+        <button onclick="startGame()" class="btn start-btn">开始游戏</button>
+        <button onclick="showRules()" class="btn">游戏规则</button>
+        
+        <div id="rules" class="rules hidden">
+            <h3>📜 游戏规则：</h3>
+            <p>1. 选择难度开始游戏</p>
+            <p>2. 点击空格填写正确答案</p>
+            <p>3. 使用提示会扣除5分</p>
+            <p>4. 倒计时结束游戏终止</p>
+        </div>
     </div>
-    
-    <div class="game-rules" id="rules" style="display: none;">
-      <h2>游戏规则</h2>
-      <p>根据李白的诗句，在空白处填入正确的字或词，完成诗句。</p>
-      <button id="close-rules-btn">关闭规则</button>
+
+    <div id="game" class="container hidden">
+        <div class="header">
+            <span>⏳ 剩余时间：<span id="timer">60</span>秒</span>
+            <span>🎯 得分：<span id="score">0</span></span>
+            <button onclick="showHint()" class="btn hint-btn">💡 提示 (剩余: <span id="hints">3</span>)</button>
+        </div>
+        
+        <div id="poem"></div>
+        
+        <div class="action-buttons">
+            <button onclick="checkAnswers()" class="btn check-btn">✔️ 检查答案</button>
+            <button onclick="backToHome()" class="btn">🏠 返回首页</button>
+        </div>
     </div>
-    
-    <div class="game-screen" id="game-screen" style="display: none;">
-      <p id="poetry"></p>
-      <div id="poetry-input"></div>
-      <button id="check-btn">检查</button>
-      <p id="feedback"></p>
-    </div>
-  </div>
-  <script src="script.js"></script>
+
+    <script src="game.js"></script>
 </body>
 </html>
