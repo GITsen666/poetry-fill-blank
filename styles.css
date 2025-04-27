@@ -1,123 +1,75 @@
-/* 重置默认样式 */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* 基础样式 */
+:root {
+    --ink-color: #2c1e15;
+    --paper-color: #f9f5e9;
+    --gold-accent: #c5a220;
+    --poetry-red: #9a2f1e;
 }
 
 body {
-    font-family: '楷体', 'KaiTi', cursive;
-    background: #f0e6d3;
-    color: #3e2723;
+    font-family: 'Ma Shan Zheng', cursive;
+    background: linear-gradient(45deg, #e6d8c3 0%, #d3c4ab 100%);
     min-height: 100vh;
-    padding: 20px;
+    margin: 0;
+    padding: 2rem;
 }
 
-/* 容器布局 */
+/* 游戏容器 */
 .container {
     max-width: 800px;
     margin: 0 auto;
-    text-align: center;
+    background: url('data:image/png;base64,iVBORw0KG...') repeat;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
 
-/* 按钮样式 */
-.btn {
-    background: #4CAF50;
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 25px;
-    margin: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 16px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+/* 诗词显示 */
+.poem-container {
+    padding: 2rem;
+    line-height: 2.5;
+    font-size: 1.8rem;
 }
 
-.btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-/* 游戏规则样式 */
-.rules {
-    background: rgba(255,255,255,0.95);
-    padding: 20px;
-    border-radius: 15px;
-    margin: 20px auto;
-    width: 90%;
-    text-align: left;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.hl-blue {
-    color: #2196F3;
-    font-weight: bold;
-}
-
-.hl-red {
-    color: #f44336;
-    font-weight: bold;
-}
-
-/* 诗词填空样式 */
-.poem-line {
-    margin: 20px 0;
-    font-size: 1.4em;
-    line-height: 1.8;
-    padding: 15px;
-    background: rgba(255,255,255,0.9);
-    border-radius: 10px;
+.verse {
+    margin: 1.5rem 0;
+    position: relative;
 }
 
 .blank {
     display: inline-block;
-    min-width: 80px;
-    border-bottom: 3px solid #2196F3;
-    margin: 0 8px;
+    min-width: 100px;
+    border-bottom: 2px dashed var(--ink-color);
+    margin: 0 0.5rem;
     cursor: pointer;
-    color: #2196F3;
     transition: all 0.3s ease;
-    padding: 0 4px;
 }
 
-/* 动画效果 */
-@keyframes correctAnim {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+.blank.filled {
+    border-bottom-style: solid;
+    color: var(--poetry-red);
 }
 
-@keyframes wrongShake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(12px); }
-    75% { transform: translateX(-12px); }
-    100% { transform: translateX(0); }
-}
-
-.correct { 
-    animation: correctAnim 0.6s;
-    color: #4CAF50 !important;
-}
-
-.wrong { 
-    animation: wrongShake 0.6s;
-    color: #f44336 !important;
+/* 模态框样式 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--paper-color);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 /* 移动端适配 */
 @media (max-width: 480px) {
-    .poem-line {
-        font-size: 1.1em;
+    .poem-container {
+        font-size: 1.4rem;
+        padding: 1rem;
     }
     
     .blank {
-        min-width: 60px;
-    }
-    
-    .header {
-        grid-template-columns: 1fr;
+        min-width: 80px;
     }
 }
