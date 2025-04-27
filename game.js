@@ -1,11 +1,13 @@
+// 游戏核心逻辑
 let currentPoem = [];
 let answers = {};
 let timeLeft = 60;
 let score = 0;
 let hintsLeft = 3;
 let currentDifficulty = 'easy';
-let timerInterval;
+let timerInterval = null;
 
+// 诗词数据库
 const poems = {
     easy: [
         {
@@ -46,9 +48,14 @@ const poems = {
 
 // 初始化游戏
 document.addEventListener('DOMContentLoaded', () => {
-    const savedScore = localStorage.getItem('highscore');
-    document.getElementById('highscore').textContent = savedScore || 0;
+    const savedScore = localStorage.getItem('highscore') || 0;
+    document.getElementById('highscore').textContent = savedScore;
 });
+
+// 核心函数
+function toggleRules() {
+    document.getElementById('rules').classList.toggle('hidden');
+}
 
 function startGame() {
     // 重置游戏状态
@@ -56,13 +63,10 @@ function startGame() {
     hintsLeft = 3;
     score = 0;
     answers = {};
+    clearInterval(timerInterval);
     
     // 设置倒计时
-    timeLeft = {
-        easy: 60,
-        medium: 45,
-        hard: 30
-    }[currentDifficulty];
+    timeLeft = { easy: 60, medium: 45, hard: 30 }[currentDifficulty];
     
     // 更新界面
     document.getElementById('home').classList.add('hidden');
@@ -85,8 +89,11 @@ function loadRandomPoem() {
     poemDiv.innerHTML = currentPoem.map((line, lineIndex) => {
         let lineHTML = line.text;
         line.blanks.forEach(blank => {
+            const uniqueKey = `${lineIndex}-${blank.position}`;
             lineHTML = lineHTML.replace('____', 
-                `<span class="blank" onclick="fillBlank(${blank.position}, ${lineIndex})">____</span>`);
+                `<span class="blank" 
+                      onclick="fillBlank(${blank.position}, ${lineIndex})" 
+                      data-key="${uniqueKey}">____</span>`);
         });
         return `<div class="poem-line">${lineHTML}</div>`;
     }).join('');
@@ -94,28 +101,30 @@ function loadRandomPoem() {
 
 function fillBlank(position, lineIndex) {
     const blank = currentPoem[lineIndex].blanks.find(b => b.position === position);
-    let answer = prompt(`请输入（输入 ? 获取提示）:\n示例答案长度：${blank.answer.length}字`);
+    const uniqueKey = `${lineIndex}-${position}`;
     
-    if(answer === '?') {
-        if(hintsLeft > 0) {
-            hintsLeft--;
-            score = Math.max(0, score - 5);
-            document.getElementById('hints').textContent = hintsLeft;
-            document.getElementById('score').textContent = score;
-            alert(`提示：${blank.hint}`);
-        } else {
-            alert("没有剩余提示了！");
-        }
+    const userInput = prompt(`请输入正确答案（${blank.answer.length}个字）：\n输入 ? 获取提示`);
+    
+    if (userInput === '?') {
+        handleHintRequest(blank);
         return;
     }
     
-    if(answer && answer.trim()) {
-        answers[position] = answer.trim();
-        document.querySelectorAll('.blank').forEach(blank => {
-            if(blank.onclick.toString().includes(position)) {
-                blank.textContent = answer;
-            }
-        });
+    if (userInput && userInput.trim()) {
+        answers[uniqueKey] = userInput.trim();
+        document.querySelector(`[data-key="${uniqueKey}"]`).textContent = userInput.trim();
+    }
+}
+
+function handleHintRequest(blank) {
+    if (hintsLeft > 0) {
+        hintsLeft--;
+        score = Math.max(0, score - 5);
+        document.getElementById('hints').textContent = hintsLeft;
+        document.getElementById('score').textContent = score;
+        alert(`💡 提示：${blank.hint}`);
+    } else {
+        alert("⚠️ 没有剩余提示了！");
     }
 }
 
@@ -123,12 +132,15 @@ function checkAnswers() {
     let allCorrect = true;
     const poemLines = document.querySelectorAll('.poem-line');
     
+    poemLines.forEach(line => line.classList.remove('wrong', 'correct'));
+    
     currentPoem.forEach((line, lineIndex) => {
         line.blanks.forEach(blank => {
-            const userAnswer = answers[blank.position];
+            const uniqueKey = `${lineIndex}-${blank.position}`;
+            const userAnswer = answers[uniqueKey];
             const isCorrect = userAnswer === blank.answer;
             
-            if(!isCorrect) {
+            if (!isCorrect) {
                 allCorrect = false;
                 poemLines[lineIndex].classList.add('wrong');
                 setTimeout(() => poemLines[lineIndex].classList.remove('wrong'), 600);
@@ -136,53 +148,57 @@ function checkAnswers() {
         });
     });
 
-    if(allCorrect) {
-        score += {
-            easy: 10,
-            medium: 15,
-            hard: 20
-        }[currentDifficulty];
-        
-        document.getElementById('score').textContent = score;
-        document.getElementById('poem').classList.add('correct');
-        setTimeout(() => {
-            document.getElementById('poem').classList.remove('correct');
-            loadRandomPoem();
-        }, 800);
-        
-        // 更新最高分
-        const currentHighscore = localStorage.getItem('highscore') || 0;
-        if(score > currentHighscore) {
-            localStorage.setItem('highscore', score);
-            document.getElementById('highscore').textContent = score;
-        }
+    if (allCorrect) {
+        updateScore();
+        handleCorrectAnswer();
     } else {
         alert("❌ 还有错误答案，请检查！");
     }
 }
 
+function updateScore() {
+    score += { easy: 10, medium: 15, hard: 20 }[currentDifficulty];
+    document.getElementById('score').textContent = score;
+    
+    const currentHighscore = parseInt(localStorage.getItem('highscore')) || 0;
+    if (score > currentHighscore) {
+        localStorage.setItem('highscore', score);
+        document.getElementById('highscore').textContent = score;
+    }
+}
+
+function handleCorrectAnswer() {
+    document.getElementById('poem').classList.add('correct');
+    setTimeout(() => {
+        document.getElementById('poem').classList.remove('correct');
+        loadRandomPoem();
+        answers = {};
+    }, 800);
+}
+
 function showHint() {
-    if(hintsLeft <= 0) {
-        alert("提示次数已用尽！");
+    if (hintsLeft <= 0) {
+        alert("⚠️ 提示次数已用尽！");
         return;
     }
     
     const emptyBlanks = currentPoem
-        .flatMap(line => line.blanks)
-        .filter(blank => !answers[blank.position]);
+        .flatMap((line, lineIndex) => line.blanks.map(blank => ({
+            ...blank,
+            uniqueKey: `${lineIndex}-${blank.position}`
+        })))
+        .filter(blank => !answers[blank.uniqueKey]);
     
-    if(emptyBlanks.length === 0) return;
+    if (emptyBlanks.length === 0) return;
     
     const randomBlank = emptyBlanks[Math.floor(Math.random() * emptyBlanks.length)];
-    const firstChar = randomBlank.answer[0];
-    
     hintsLeft--;
     score = Math.max(0, score - 5);
     
     document.getElementById('hints').textContent = hintsLeft;
     document.getElementById('score').textContent = score;
     
-    alert(`💡 提示：第 ${randomBlank.position} 空的首字是「${firstChar}」\n（扣除5分，剩余提示：${hintsLeft}次）`);
+    alert(`💡 提示：第 ${randomBlank.position} 空的首字是「${randomBlank.answer[0]}」\n（扣除5分，剩余提示：${hintsLeft}次）`);
 }
 
 function startTimer() {
@@ -191,7 +207,7 @@ function startTimer() {
         timeLeft--;
         document.getElementById('timer').textContent = timeLeft;
         
-        if(timeLeft <= 0) {
+        if (timeLeft <= 0) {
             clearInterval(timerInterval);
             alert(`⏰ 时间到！最终得分：${score}`);
             backToHome();
