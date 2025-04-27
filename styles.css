@@ -1,17 +1,26 @@
-body {
-    font-family: '楷体', cursive;
+/* 重置默认样式 */
+* {
     margin: 0;
-    padding: 20px;
-    background: #f0e6d3;
-    color: #3e2723;
+    padding: 0;
+    box-sizing: border-box;
 }
 
+body {
+    font-family: '楷体', 'KaiTi', cursive;
+    background: #f0e6d3;
+    color: #3e2723;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* 容器布局 */
 .container {
     max-width: 800px;
     margin: 0 auto;
     text-align: center;
 }
 
+/* 按钮样式 */
 .btn {
     background: #4CAF50;
     color: white;
@@ -22,6 +31,9 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .btn:hover {
@@ -29,14 +41,35 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
-.hidden {
-    display: none !important;
+/* 游戏规则样式 */
+.rules {
+    background: rgba(255,255,255,0.95);
+    padding: 20px;
+    border-radius: 15px;
+    margin: 20px auto;
+    width: 90%;
+    text-align: left;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
+.hl-blue {
+    color: #2196F3;
+    font-weight: bold;
+}
+
+.hl-red {
+    color: #f44336;
+    font-weight: bold;
+}
+
+/* 诗词填空样式 */
 .poem-line {
     margin: 20px 0;
     font-size: 1.4em;
     line-height: 1.8;
+    padding: 15px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 10px;
 }
 
 .blank {
@@ -46,34 +79,11 @@ body {
     margin: 0 8px;
     cursor: pointer;
     color: #2196F3;
-    position: relative;
     transition: all 0.3s ease;
+    padding: 0 4px;
 }
 
-.blank:hover {
-    background: #E3F2FD;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 30px 0;
-    padding: 15px;
-    background: #FFF;
-    border-radius: 15px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.rules {
-    background: #FFF;
-    padding: 20px;
-    border-radius: 15px;
-    margin: 20px auto;
-    width: 80%;
-    text-align: left;
-}
-
+/* 动画效果 */
 @keyframes correctAnim {
     0% { transform: scale(1); }
     50% { transform: scale(1.1); }
@@ -97,41 +107,17 @@ body {
     color: #f44336 !important;
 }
 
-.highscore {
-    font-size: 1.5em;
-    color: #FF5722;
-    margin: 20px 0;
-    font-weight: bold;
-}
-
-.difficulty select {
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 8px;
-    margin: 15px 0;
-    border: 2px solid #4CAF50;
-}
-
-.hint-btn { background: #9C27B0; }
-.start-btn { background: #2196F3; }
-.check-btn { background: #FF9800; }
-
-.action-buttons {
-    margin-top: 30px;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-
-.modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 0 30px rgba(0,0,0,0.2);
-    max-width: 300px;
-    text-align: center;
+/* 移动端适配 */
+@media (max-width: 480px) {
+    .poem-line {
+        font-size: 1.1em;
+    }
+    
+    .blank {
+        min-width: 60px;
+    }
+    
+    .header {
+        grid-template-columns: 1fr;
+    }
 }
