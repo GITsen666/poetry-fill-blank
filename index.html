@@ -8,27 +8,27 @@
 </head>
 <body>
     <div id="home" class="container">
-        <h1>李白诗词填空</h1>
+        <h1>📜 李白诗词填空</h1>
         <div class="highscore">🏆 最高分：<span id="highscore">0</span></div>
         
         <div class="difficulty">
             <select id="difficulty">
-                <option value="easy">简单</option>
-                <option value="medium">中等</option>
-                <option value="hard">困难</option>
+                <option value="easy">简单模式</option>
+                <option value="medium">中等模式</option>
+                <option value="hard">困难模式</option>
             </select>
         </div>
         
         <button onclick="startGame()" class="btn start-btn">🎮 开始游戏</button>
-        <button onclick="showRules()" class="btn">📖 游戏规则</button>
+        <button onclick="toggleRules()" class="btn">📖 游戏规则</button>
         
         <div id="rules" class="rules hidden">
-            <h3>📜 游戏规则：</h3>
-            <p>1. 选择难度开始游戏（难度越高时间越少）</p>
-            <p>2. 点击蓝色空格填写正确答案</p>
-            <p>3. 输入?可获取字词提示（每次扣除5分）</p>
-            <p>4. 每空答对得分：简单10分/中等15分/困难20分</p>
-            <p>5. 倒计时结束游戏自动终止</p>
+            <h3>🎯 游戏规则：</h3>
+            <p>1. 选择难度开始挑战（难度越高时间越少）</p>
+            <p>2. 点击<span class="hl-blue">蓝色空格</span>填写正确答案</p>
+            <p>3. 输入 <span class="hl-red">?</span> 可获取文字提示（每次-5分）</p>
+            <p>4. 得分规则：简单+10/中等+15/困难+20</p>
+            <p>5. 倒计时结束自动结算成绩</p>
         </div>
     </div>
 
