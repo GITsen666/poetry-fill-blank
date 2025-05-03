@@ -3,72 +3,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>诗仙词境·李白诗词雅填</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="container">
-        <!-- 首页 -->
-        <div id="home" class="page active">
-            <div class="title-container">
-                <h1>诗仙词境</h1>
-                <div class="seal">太白遗风</div>
-            </div>
-
-            <div class="difficulty-selector">
-                <div class="difficulty active" data-level="easy">初阶</div>
-                <div class="difficulty" data-level="medium">中阶</div>
-                <div class="difficulty" data-level="hard">高阶</div>
-            </div>
-
-            <div class="rules-container">
-                <h3><i class="icon-scroll"></i> 游戏要诀</h3>
-                <ul>
-                    <li>选择难度开启诗境</li>
-                    <li>点击空缺字词填空</li>
-                    <li>长按空格获取提示</li>
-                    <li>限时完成可得佳评</li>
-                </ul>
-            </div>
-
-            <button class="start-btn">开启诗卷</button>
-        </div>
-
-        <!-- 游戏界面 -->
-        <div id="game" class="page">
-            <div class="game-header">
-                <div class="timer">
-                    <i class="icon-hourglass"></i>
-                    <span id="time">60</span>
-                </div>
-                <div class="score">
-                    <i class="icon-star"></i>
-                    <span id="points">0</span>
-                </div>
-            </div>
-
-            <div id="poem-display" class="poem-container"></div>
-
-            <div class="controls">
-                <button class="check-btn">校验诗作</button>
-                <button class="hint-btn">文思提示(<span id="hints-left">3</span>)</button>
-                <button class="back-btn">返回书斋</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 输入模态框 -->
-    <div id="input-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>填写空缺</h3>
-            <input type="text" id="poem-input" placeholder="输入正确字词...">
-            <button id="submit-answer">确认</button>
-            <p class="hint-text"></p>
-        </div>
-    </div>
-
-    <script src="game.js"></script>
-</body>
-</html>
+    <title>量子导航系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-blue: #0ff0fc;
+            --neon-purple: #ff00ff;
+            --neon-pink: #ff00aa;
+            --neon-green: #00ffaa;
+            --dark-bg: #0a0a1a;
+            --darker-bg: #050510;
+            --panel-bg: rgba(15, 15, 35, 0.7);
+            --panel-border: rgba(100, 200, 255, 0.2);
+            --text-glow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Orbitron', 'Rajdhani', 'Agency FB', sans-serif;
+        }
+        
+        @font-face {
+            font-family: 'Orbitron';
+            src: url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        }
+        
+        body {
+            background: var(--dark-bg);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 170, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(255, 0, 255, 0.05) 0%, transparent 20%),
+                linear-gradient(to bottom, var(--darker-bg), var(--dark-bg));
+            background-attachment: fixed;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .grid-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(to right, rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 95%,
+                rgba(0, 255, 255, 0.05) 96%,
+                transparent 97%
+            );
+            background-size: 100% 5px;
+            animation: scanline 8s linear infinite;
+            pointer-events: none;
+            z-index: 100;
+            mix-blend-mode: overlay;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            padding: 2rem;
+            border: 1px solid var(--panel-border);
+            background: var(--panel-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 255, 255, 0.1),
+                transparent
+            );
+            animation: shine 3s infinite;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: var(--neon-blue);
+            text-shadow: var(--text-glow);
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 300;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .terminal {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--neon-blue);
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+        
+        .terminal::before {
+            content: 'SYSTEM TERMINAL';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: var(--dark-bg);
+            padding: 0 10px;
+            color: var(--neon-blue);
+            font-size: 0.8rem;
+        }
+        
+        .command-line {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .prompt {
+            color: var(--neon-green);
+            margin-right: 10px;
+        }
+        
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: var(--neon-blue);
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 5px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 25px rgba(0, 255, 255, 0.4);
+            border-color: var(--neon-blue);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+        }
+        
+        .card-image {
+            height: 180px;
+            background: linear-gradient(135deg, rgba(0, 0, 50, 0.5), rgba(50, 0, 100, 0.5));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-image i {
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.2);
+            z-index: 1;
+        }
+        
+        .card-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(45deg, transparent 48%, var(--neon-blue) 49%, var(--neon-blue) 51%, transparent 52%),
+                linear-gradient(-45deg, transparent 48%, var(--neon-blue) 49%, var(--neon-blue) 51%, transparent 52%);
+            background-size: 20px 20px;
+            opacity: 0.1;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--neon-blue);
+            font-weight: 500;
+        }
+        
+        .card p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .tag {
+            background: rgba(0, 255, 255, 0.1);
+            color: var(--neon-green);
+            padding: 0.3rem 0.8rem;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            background: transparent;
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+            border-radius: 3px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+        
+        .btn:hover {
+            background: var(--neon-blue);
+            color: var(--dark-bg);
+            text-shadow: none;
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+        
+        .btn i {
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 5rem;
+            padding: 2rem;
+            border-top: 1px solid rgba(0, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+        
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding: 0.8rem 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 3px;
+            font-size: 0.8rem;
+            color: var(--neon-green);
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status-item i {
+            color: var(--neon-blue);
+        }
+        
+        /* 动画效果 */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+ 
